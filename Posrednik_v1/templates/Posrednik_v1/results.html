@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wyniki obliczeń</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Wyniki obliczeń</h1>
+
+    {% if not zamkniete %}
+        <h2>Rozwiązywanie Otwartego zagadnienia transportowego.</h2>
+        {% if dodano == "Dostawca" %}
+            <p>Popyt większy niż podaż, dlatego do rozwiązania został dodany Fikcyjny Dostawca.</p>
+        {% else %}
+            <p>Podaż większa niż popyt, dlatego do rozwiązania został dodany Fikcyjny Odbiorca.</p>
+        {% endif %}
+    {% else %}
+        <h2>Zagadnienie transportowe jest zamknięte.</h2>
+    {% endif %}
+
+    <h2>Macierz zysków:</h2>
+    <div class="table-container-results">
+        <table class="results-table">
+            <tr>
+                <th></th>
+                {% with nowa_macierz.0|length as total_odbiorcy %}
+                    {% for j in nowa_macierz.0 %}
+                        {% if forloop.counter0 == total_odbiorcy|add:"-1" and liczba_odbiorcow < total_odbiorcy %}
+                            <th>Fikcyjny Odbiorca</th>
+                        {% else %}
+                            <th>Odbiorca {{ forloop.counter }}</th>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            </tr>
+            {% with nowa_macierz|length as total_dostawcy %}
+                {% for row in nowa_macierz %}
+                    <tr>
+                        {% if forloop.counter0 == total_dostawcy|add:"-1" and liczba_dostawcow < total_dostawcy %}
+                            <td>Fikcyjny Dostawca</td>
+                        {% else %}
+                            <td>Dostawca {{ forloop.counter }}</td>
+                        {% endif %}
+                        {% for value in row %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% endwith %}
+        </table>
+    </div>
+
+    <h2>Optymalne rozwiązanie:</h2>
+    <div class="table-container-results">
+        <table class="results-table">
+            <tr>
+                <th></th>
+                {% with nowa_macierz.0|length as total_odbiorcy %}
+                    {% for j in nowa_macierz.0 %}
+                        {% if forloop.counter0 == total_odbiorcy|add:"-1" and liczba_odbiorcow < total_odbiorcy %}
+                            <th>Fikcyjny Odbiorca</th>
+                        {% else %}
+                            <th>Odbiorca {{ forloop.counter }}</th>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            </tr>
+            {% with nowa_macierz|length as total_dostawcy %}
+                {% for row in rozwiazanie %}
+                    <tr>
+                        {% if forloop.counter0 == total_dostawcy|add:"-1" and liczba_dostawcow < total_dostawcy %}
+                            <td>Fikcyjny Dostawca</td>
+                        {% else %}
+                            <td>Dostawca {{ forloop.counter }}</td>
+                        {% endif %}
+                        {% for value in row %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% endwith %}
+        </table>
+    </div>
+
+    {% if wybor == "MAX" %}
+        <h2>Maksymalny zysk:</h2>
+    {% else %}
+        <h2>Minimalny koszt:</h2>
+    {% endif %}
+    <pre class="results-pre">{{ zysk }}</pre>
+
+    <h2>Koszty transportu:</h2>
+    <pre class="results-pre">{{ koszt_transportu }}</pre>
+
+    <h2>Całkowity przychód:</h2>
+    <pre class="results-pre">{{ przychod }}</pre>
+
+    <h2>Koszta zakupu:</h2>
+    <pre class="results-pre">{{ koszt_zakupu }}</pre>
+
+    <h2>Wszystkie koszta:</h2>
+    <pre class="results-pre">{{ wszystkie_koszty }}</pre>
+
+    <form method="get" action="{% url 'initial_input' %}">
+        <button type="submit">Zakończ</button>
+    </form>
+</body>
+</html>

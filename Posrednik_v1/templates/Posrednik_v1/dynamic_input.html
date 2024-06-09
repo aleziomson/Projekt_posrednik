@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wprowadź dane</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Wprowadź dane</h1>
+    <form method="post" action="{% url 'calculate' %}">
+        {% csrf_token %}
+        <input type="hidden" name="liczba_dostawcow" value="{{ liczba_dostawcow }}">
+        <input type="hidden" name="liczba_odbiorcow" value="{{ liczba_odbiorcow }}">
+
+        <h2>Macierz kosztów dostawy</h2>
+        <div class="table-container">
+            <table class="input-table">
+                <tr>
+                    <th></th>
+                    {% for j in odbiorcy_range %}
+                        <th>Odbiorca {{ forloop.counter }}</th>
+                    {% endfor %}
+                </tr>
+                {% for i in dostawcy_range %}
+                    <tr>
+                        <th>Dostawca {{ forloop.counter }}</th>
+                        {% for j in odbiorcy_range %}
+                            <td><input type="number" name="koszty_dostawy_{{ i }}_{{ j }}" required></td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <h2>Koszty zakupu</h2>
+        <div class="table-container">
+            <table class="input-table">
+                <tr>
+                    {% for i in dostawcy_range %}
+                        <th>Dostawca {{ forloop.counter }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for i in dostawcy_range %}
+                        <td><input type="number" name="koszty_zakupu_{{ i }}" required></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <h2>Ceny sprzedaży</h2>
+        <div class="table-container">
+            <table class="input-table">
+                <tr>
+                    {% for j in odbiorcy_range %}
+                        <th>Odbiorca {{ forloop.counter }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for j in odbiorcy_range %}
+                        <td><input type="number" name="ceny_sprzedazy_{{ j }}" required></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <h2>Popyt</h2>
+        <div class="table-container">
+            <table class="input-table">
+                <tr>
+                    {% for j in odbiorcy_range %}
+                        <th>Odbiorca {{ forloop.counter }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for j in odbiorcy_range %}
+                        <td><input type="number" name="popyt_{{ j }}" required></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <h2>Podaż</h2>
+        <div class="table-container">
+            <table class="input-table">
+                <tr>
+                    {% for i in dostawcy_range %}
+                        <th>Dostawca {{ forloop.counter }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for i in dostawcy_range %}
+                        <td><input type="number" name="podaz_{{ i }}" required></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <h2>Ewentualne koszty magazynowania</h2>
+        <div class="table-container">
+            <table class="input-table">
+                <tr>
+                    {% for j in dostawcy_range %}
+                        <td><input type="number" name="ewentualne_koszty_magazynowania_{{ j }}" required></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <button type="submit">Oblicz</button>
+    </form>
+</body>
+</html>

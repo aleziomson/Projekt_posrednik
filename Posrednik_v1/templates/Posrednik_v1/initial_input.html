@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wprowadź dane początkowe</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Wprowadź dane początkowe</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label for="wybor">Wybór (MAX lub MIN):</label>
+        <select name="wybor" id="wybor">
+            <option value="MAX">MAX</option>
+            <option value="MIN">MIN</option>
+        </select>
+        <button type="submit">Dalej</button>
+    </form>
+
+    <h2>Lub wczytaj plik TXT</h2>
+    <form method="post" enctype="multipart/form-data" action="{% url 'upload_file' %}">
+        {% csrf_token %}
+        <input type="file" name="file" accept=".txt" required>
+        <button type="submit">Wczytaj plik</button>
+    </form>
+</body>
+</html>
